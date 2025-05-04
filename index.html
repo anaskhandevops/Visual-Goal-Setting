@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goal Getter! - Visual Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FFFCEB; /* Requested background */
+        }
+
+        /* Main container styling */
+        .main-container {
+            background-color: #ffffff;
+            border: 3px solid #2D3748;
+            border-radius: 16px;
+            box-shadow: 8px 8px 0px #2D3748;
+            width: 100%;
+            max-width: 64rem; /* max-w-5xl */
+            margin: 2rem auto;
+            padding: 1.5rem sm:p-8; /* p-6 sm:p-8 */
+        }
+
+         /* Section Container Styling (Add Goal) */
+        .section-container {
+             background-color: #FFF7ED; /* orange-50 */
+             border: 2px solid #FDBA74; /* orange-300 */
+             border-radius: 12px;
+             box-shadow: 4px 4px 0px #FDBA74; /* Offset shadow using border color */
+             padding: 1.5rem; /* p-6 */
+             margin-bottom: 2rem; /* mb-8 */
+        }
+         /* Goal Card Styling */
+        .goal-card {
+             background-color: #FEF3C7; /* amber-100 */
+             border: 2px solid #FDE68A; /* amber-200 */
+             border-radius: 12px;
+             box-shadow: 4px 4px 0px #FDE68A;
+             padding: 1rem 1.5rem; /* p-4 sm:p-6 */
+             margin-bottom: 1.5rem; /* mb-6 */
+             transition: box-shadow 0.2s ease-out;
+        }
+         .goal-card:hover {
+             box-shadow: 6px 6px 0px #FDE08A;
+         }
+
+        /* Playful Input/Date Styling */
+        input[type="text"], input[type="date"] {
+            width: 100%;
+            padding: 0.65rem 1rem; /* Adjusted padding */
+            background-color: #ffffff;
+            border: 3px solid #4A5568;
+            border-radius: 10px;
+            color: #2D3748;
+            font-weight: 500;
+            transition: transform 0.15s ease-out, box-shadow 0.15s ease-out, border-color 0.15s ease-out;
+            box-shadow: 3px 3px 0px #4A5568;
+            font-size: 0.9rem;
+        }
+        input::placeholder { color: #A0AEC0; font-weight: 400; }
+        input:focus {
+            outline: none;
+            border-color: #FF7F50; /* Coral */
+            box-shadow: 3px 3px 0px #FF7F50, 0 0 0 3px #FFFCEB;
+            transform: translateY(-1px) translateX(-1px);
+        }
+         /* Style date input specifically */
+         input[type="date"] { color-scheme: light; } /* Improve date picker appearance */
+
+
+        /* Playful Action Button Style */
+        .action-button {
+            background-color: #FF7F50; /* Coral */
+            color: white;
+            font-weight: 700; /* bold */
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem; /* rounded-xl */
+            border: 3px solid #2D3748; /* Darker border */
+            box-shadow: 5px 5px 0px #2D3748; /* Bigger shadow */
+            transition: all 0.15s ease-out;
+            cursor: pointer;
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+            text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.9rem;
+        }
+        .action-button:hover {
+            background-color: #FF6347; /* Tomato */
+            box-shadow: 6px 6px 0px #2D3748;
+            transform: translateY(-2px) translateX(-1px); /* More lift */
+        }
+         .action-button:active {
+            background-color: #CD5C5C; /* IndianRed */
+            box-shadow: 2px 2px 0px #2D3748;
+            transform: translateY(2px) translateX(2px); /* Push down effect */
+        }
+        .action-button:focus {
+            outline: none;
+            box-shadow: 5px 5px 0px #2D3748, 0 0 0 3px #FFFCEB, 0 0 0 5px #FF7F50; /* Ring effect */
+        }
+         /* Small Add Button Style (for steps) */
+        .add-step-button {
+             background-color: #34D399; /* Emerald-400 */
+             color: white; padding: 0.3rem 0.8rem; font-size: 0.8rem;
+             border: 2px solid #059669; /* Emerald-600 */
+             box-shadow: 2px 2px 0px #059669;
+        }
+         .add-step-button:hover { background-color: #10B981; box-shadow: 3px 3px 0px #047857; transform: translateY(-1px);}
+         .add-step-button:active { background-color: #059669; box-shadow: 1px 1px 0px #047857; transform: translateY(1px);}
+
+        /* Delete Button Styling (Small Red X) */
+        .delete-button {
+             background-color: #FEF2F2; color: #DC2626; border: 2px solid #F87171;
+             border-radius: 50%; width: 24px; height: 24px; font-weight: bold;
+             font-size: 0.9rem; line-height: 1; padding: 0; margin-left: 0.5rem;
+             transition: all 0.15s ease-out; box-shadow: 2px 2px 0px #FCA5A5;
+             display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+             cursor: pointer;
+        }
+        .delete-button:hover { background-color: #FEE2E2; color: #B91C1C; transform: translateY(-1px) scale(1.05); box-shadow: 3px 3px 0px #F87171; }
+        .delete-button:active { transform: translateY(1px) scale(0.95); box-shadow: 1px 1px 0px #FCA5A5; }
+
+        /* Progress Bar Styling */
+        .progress-bar-container {
+            width: 100%; background-color: #FDE68A; /* amber-200 */
+            border-radius: 10px; height: 20px; /* Increased height */
+            overflow: hidden; border: 2px solid #FDBA74; /* amber-300 */
+            box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1);
+            margin-top: 0.5rem; margin-bottom: 1rem;
+        }
+        .progress-bar-fill {
+            height: 100%; background-color: #34D399; /* Emerald-400 */
+            background-image: linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+            background-size: 1rem 1rem;
+            border-radius: 8px 0 0 8px; /* Rounded only on left */
+            transition: width 0.4s ease-in-out;
+            text-align: center; color: #065F46; /* Emerald-800 */ font-size: 0.75rem; font-weight: 600; line-height: 20px;
+        }
+         .progress-bar-fill.completed {
+              background-color: #10B981; /* Emerald-500 */
+              border-radius: 8px; /* Fully rounded when complete */
+         }
+
+        /* Step List Styling */
+        .step-list { list-style: none; padding: 0; margin-top: 1rem; }
+        .step-item {
+            display: flex; align-items: center; justify-content: space-between;
+            background-color: #ffffff; padding: 0.6rem 0.8rem;
+            border-radius: 8px; margin-bottom: 0.5rem;
+            border: 1px solid #FDE68A; /* amber-200 */
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.04);
+            transition: background-color 0.2s ease;
+        }
+         .step-item.completed {
+             background-color: #ECFDF5; /* emerald-50 */
+             border-color: #A7F3D0; /* emerald-200 */
+         }
+        .step-item label {
+             flex-grow: 1; margin-left: 0.75rem; margin-bottom: 0; /* Override default label margin */
+             font-size: 0.9rem; color: #374151; /* gray-700 */
+             cursor: pointer;
+             font-weight: 500;
+        }
+        .step-item.completed label {
+             text-decoration: line-through;
+             color: #6EE7B7; /* emerald-300 */
+        }
+        .step-item input[type="checkbox"] {
+             width: 18px; height: 18px; flex-shrink: 0;
+             accent-color: #FF7F50; /* Coral */
+             border-radius: 4px; border: 2px solid #4A5568;
+             cursor: pointer;
+        }
+         .step-item input[type="checkbox"]:checked {
+             border-color: #10B981; /* Emerald-500 */
+             background-color: #10B981;
+         }
+
+        /* Headings & Labels */
+        .section-heading { color: #C2410C; font-weight: 700; text-align: center; border-bottom: 2px dashed #FDBA74; padding-bottom: 0.5rem; margin-bottom: 1rem; font-size: 1.125rem; }
+        label { color: #9A3412; font-weight: 600; font-size: 0.875rem; margin-bottom: 0.5rem; display: block; }
+        .goal-title { font-size: 1.25rem; font-weight: 700; color: #B45309; margin-bottom: 0.25rem; }
+        .goal-deadline { font-size: 0.8rem; color: #EA580C; margin-bottom: 0.5rem; font-style: italic; }
+        .goal-actions { display: flex; justify-content: flex-end; margin-top: -0.5rem; margin-bottom: 0.5rem;}
+
+    </style>
+</head>
+<body class="p-4 md:p-6">
+
+    <div class="main-container">
+        <h1 class="text-3xl sm:text-4xl font-bold text-center text-slate-800 mb-8 tracking-tight flex items-center justify-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-9 h-9 text-orange-500">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zm-7.518-.267A8.25 8.25 0 1120.25 10.5M8.288 14.212A5.25 5.25 0 1117.25 10.5" />
+            </svg>
+            Goal Getter!
+        </h1>
+
+        <div class="section-container">
+            <h2 class="section-heading">🎯 Add a New Goal</h2>
+            <form id="addGoalForm" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                <div class="md:col-span-2">
+                    <label for="goalTitle">Goal Title:</label>
+                    <input type="text" id="goalTitle" placeholder="e.g., Learn JavaScript" required>
+                </div>
+                <div>
+                    <label for="goalDeadline">Optional Deadline:</label>
+                    <input type="date" id="goalDeadline">
+                </div>
+                <div class="md:col-span-3 flex justify-center pt-2">
+                    <button type="submit" class="action-button">
+                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                        Add Goal
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div id="goalsList">
+            <p id="noGoalsMessage" class="text-center text-gray-500 italic py-6">No goals added yet. Let's set some!</p>
+        </div>
+
+    </div>
+
+    <script>
+        // --- DOM Elements ---
+        const addGoalForm = document.getElementById('addGoalForm');
+        const goalTitleInput = document.getElementById('goalTitle');
+        const goalDeadlineInput = document.getElementById('goalDeadline');
+        const goalsListDiv = document.getElementById('goalsList');
+        const noGoalsMessage = document.getElementById('noGoalsMessage');
+
+        // --- State ---
+        let goals = [];
+        const STORAGE_KEY = 'visualGoalsTracker_v1';
+
+        // --- Helper Functions ---
+
+        // Format date (optional, simple version)
+        function formatDate(dateString) {
+            if (!dateString) return null;
+            try {
+                const date = new Date(dateString + 'T00:00:00'); // Avoid timezone issues
+                return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+            } catch (e) {
+                return null; // Handle invalid date strings
+            }
+        }
+
+        // Save goals to localStorage
+        function saveGoals() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(goals));
+        }
+
+        // Load goals from localStorage
+        function loadGoals() {
+            const storedGoals = localStorage.getItem(STORAGE_KEY);
+            goals = storedGoals ? JSON.parse(storedGoals) : [];
+        }
+
+         // Calculate goal completion percentage
+         function calculateProgress(goal) {
+             if (!goal.steps || goal.steps.length === 0) {
+                 return 0; // No steps = 0% progress
+             }
+             const completedSteps = goal.steps.filter(step => step.completed).length;
+             return Math.round((completedSteps / goal.steps.length) * 100);
+         }
+
+        // Render all goals and their steps
+        function renderGoals() {
+            goalsListDiv.innerHTML = ''; // Clear existing goals
+            noGoalsMessage.style.display = goals.length === 0 ? 'block' : 'none'; // Show/hide message
+
+            goals.forEach((goal, goalIndex) => {
+                const goalCard = document.createElement('div');
+                goalCard.className = 'goal-card';
+                goalCard.dataset.goalId = goal.id;
+
+                const progress = calculateProgress(goal);
+                const deadlineText = goal.deadline ? `Deadline: ${formatDate(goal.deadline)}` : '';
+                const progressText = goal.steps?.length > 0 ? `${progress}% Complete` : 'No steps yet';
+                const isCompleted = progress === 100 && goal.steps?.length > 0;
+
+                goalCard.innerHTML = `
+                    <div class="goal-actions">
+                         <button class="delete-button delete-goal-button" title="Delete Goal">&times;</button>
+                    </div>
+                    <h3 class="goal-title">${goal.title}</h3>
+                    ${deadlineText ? `<p class="goal-deadline">${deadlineText}</p>` : ''}
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill ${isCompleted ? 'completed' : ''}" style="width: ${progress}%;" title="${progress}% Complete">
+                            ${progress > 10 ? progressText : ''} </div>
+                    </div>
+                    <h4 class="text-sm font-semibold text-amber-800 mb-2 mt-4">Steps:</h4>
+                    <ul class="step-list">
+                        ${goal.steps?.map((step, stepIndex) => `
+                            <li class="step-item ${step.completed ? 'completed' : ''}" data-step-id="${step.id}">
+                                <input type="checkbox" id="step-${goal.id}-${step.id}" ${step.completed ? 'checked' : ''}>
+                                <label for="step-${goal.id}-${step.id}">${step.text}</label>
+                                <button class="delete-button delete-step-button" title="Delete Step">&times;</button>
+                            </li>
+                        `).join('') || '<li class="text-xs italic text-gray-500">No steps added yet.</li>'}
+                    </ul>
+                    <form class="add-step-form mt-4 flex gap-2">
+                        <input type="text" class="step-input flex-grow !text-sm !py-1 !px-2" placeholder="Add a new step..." required>
+                        <button type="submit" class="action-button add-step-button">Add Step</button>
+                    </form>
+                `;
+                goalsListDiv.appendChild(goalCard);
+            });
+        }
+
+        // Add a new goal
+        function addGoal(title, deadline) {
+            const newGoal = {
+                id: Date.now(), // Simple unique ID
+                title: title,
+                deadline: deadline || null,
+                steps: [] // Initialize with empty steps array
+            };
+            goals.unshift(newGoal); // Add to the beginning of the array
+            saveGoals();
+            renderGoals();
+        }
+
+        // Add a step to a specific goal
+        function addStep(goalId, stepText) {
+            const goal = goals.find(g => g.id === goalId);
+            if (goal && stepText) {
+                if (!goal.steps) { // Initialize steps array if it doesn't exist
+                    goal.steps = [];
+                }
+                const newStep = {
+                    id: Date.now(), // Simple unique ID for the step
+                    text: stepText,
+                    completed: false
+                };
+                goal.steps.push(newStep);
+                saveGoals();
+                renderGoals(); // Re-render to show the new step and update progress
+            }
+        }
+
+        // Toggle completion status of a step
+        function toggleStepCompletion(goalId, stepId) {
+            const goal = goals.find(g => g.id === goalId);
+            if (goal && goal.steps) {
+                const step = goal.steps.find(s => s.id === stepId);
+                if (step) {
+                    step.completed = !step.completed;
+                    saveGoals();
+                    renderGoals(); // Re-render to update progress and styling
+                }
+            }
+        }
+
+         // Delete a specific step from a goal
+         function deleteStep(goalId, stepId) {
+             const goal = goals.find(g => g.id === goalId);
+             if (goal && goal.steps) {
+                 goal.steps = goal.steps.filter(s => s.id !== stepId);
+                 saveGoals();
+                 renderGoals();
+             }
+         }
+
+         // Delete a main goal
+         function deleteGoal(goalId) {
+             if (confirm("Are you sure you want to delete this entire goal and all its steps?")) {
+                 goals = goals.filter(g => g.id !== goalId);
+                 saveGoals();
+                 renderGoals();
+             }
+         }
+
+        // --- Event Listeners ---
+
+        // Add Goal Form Submission
+        addGoalForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const title = goalTitleInput.value.trim();
+            const deadline = goalDeadlineInput.value; // Get date string
+            if (title) {
+                addGoal(title, deadline);
+                addGoalForm.reset(); // Clear the form
+            } else {
+                alert("Please enter a goal title.");
+            }
+        });
+
+        // Event Delegation for dynamic elements within goalsListDiv
+        goalsListDiv.addEventListener('submit', (e) => {
+            // Handle Add Step Form Submission
+            if (e.target.classList.contains('add-step-form')) {
+                e.preventDefault();
+                const stepInput = e.target.querySelector('.step-input');
+                const stepText = stepInput.value.trim();
+                const goalCard = e.target.closest('.goal-card');
+                const goalId = parseInt(goalCard.dataset.goalId, 10);
+
+                if (stepText && !isNaN(goalId)) {
+                    addStep(goalId, stepText);
+                    stepInput.value = ''; // Clear the input
+                }
+            }
+        });
+
+        goalsListDiv.addEventListener('change', (e) => {
+            // Handle Step Checkbox Change
+            if (e.target.type === 'checkbox') {
+                const stepItem = e.target.closest('.step-item');
+                const goalCard = e.target.closest('.goal-card');
+                if (stepItem && goalCard) {
+                    const stepId = parseInt(stepItem.dataset.stepId, 10);
+                    const goalId = parseInt(goalCard.dataset.goalId, 10);
+                    if (!isNaN(stepId) && !isNaN(goalId)) {
+                        toggleStepCompletion(goalId, stepId);
+                    }
+                }
+            }
+        });
+
+         goalsListDiv.addEventListener('click', (e) => {
+             // Handle Step Deletion
+             if (e.target.classList.contains('delete-step-button')) {
+                 const stepItem = e.target.closest('.step-item');
+                 const goalCard = e.target.closest('.goal-card');
+                 if (stepItem && goalCard) {
+                     const stepId = parseInt(stepItem.dataset.stepId, 10);
+                     const goalId = parseInt(goalCard.dataset.goalId, 10);
+                     if (!isNaN(stepId) && !isNaN(goalId)) {
+                         deleteStep(goalId, stepId);
+                     }
+                 }
+             }
+             // Handle Goal Deletion
+             else if (e.target.classList.contains('delete-goal-button')) {
+                 const goalCard = e.target.closest('.goal-card');
+                 if (goalCard) {
+                     const goalId = parseInt(goalCard.dataset.goalId, 10);
+                     if (!isNaN(goalId)) {
+                         deleteGoal(goalId);
+                     }
+                 }
+             }
+         });
+
+
+        // --- Initial Load ---
+        loadGoals(); // Load data from localStorage
+        renderGoals(); // Render the initial UI
+
+    </script>
+
+</body>
+</html>

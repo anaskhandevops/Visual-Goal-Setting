@@ -2,8 +2,6 @@
 
 Set your sights, break down your ambitions, and watch your progress unfold with this fun and visual goal tracker! 🚀 This tool helps you define goals, manage steps, set deadlines, and see your completion percentage climb. All data is stored locally in your browser!
 
-![Goal Getter Screenshot Placeholder](https://placehold.co/600x400/FFF7ED/C2410C?text=Goal+Getter+Screenshot)
-*(Replace the placeholder URL above with an actual screenshot of your awesome app!)*
 
 ## 🌟 Features
 
